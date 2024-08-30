@@ -1,0 +1,11 @@
+package com.mvc.models;
+
+public class Book {
+private int id;
+private String title;
+private String ISBN;
+private String author;
+private double price;
+
+
+}

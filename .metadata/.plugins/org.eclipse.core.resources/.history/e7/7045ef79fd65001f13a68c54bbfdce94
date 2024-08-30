@@ -1,0 +1,5 @@
+package com.mvc.repositry;
+
+public class PatientRepositry {
+
+}

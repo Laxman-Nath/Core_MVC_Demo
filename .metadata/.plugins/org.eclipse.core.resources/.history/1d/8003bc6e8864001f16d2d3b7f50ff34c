@@ -1,0 +1,11 @@
+package com.mvc.service;
+
+import java.util.List;
+import com.mvc.models.Patient;
+public interface PatientService {
+ void addPatient();
+ List<Patient> findAllPatient();
+ void deletePatientByIndex(int index);
+ void deletePatientById(int id);
+ 
+}

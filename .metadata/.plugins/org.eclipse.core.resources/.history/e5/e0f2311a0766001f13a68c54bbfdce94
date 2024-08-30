@@ -1,0 +1,173 @@
+package com.mvc.serviceImpl;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mvc.models.Patient;
+import com.mvc.repositry.PatientRepositry;
+import com.mvc.service.PatientService;
+
+public class PatientServiceImpl implements PatientService {
+//	static List<Patient> patients = new ArrayList<>();
+	static PatientRepositry db = new PatientRepositry();
+	static Connection conn = PatientRepositry.getConnection();
+
+	@Override
+	public void addPatient(Patient p) {
+		if (conn != null) {
+			String sql = "Insert into patient(name,address,phoneNumber) values ('" + p.getName() + "','"
+					+ p.getAddress() + "','" + p.getPhoneNumber() + "')";
+			try {
+				Statement stm = conn.createStatement();
+				int affectedRows = stm.executeUpdate(sql);
+				if (affectedRows > 0) {
+					System.out.println("Successfully inserted");
+				} else {
+					System.out.println("Error inserting");
+				}
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+		} else {
+			System.out.println("Connection error");
+		}
+
+	}
+
+	public static boolean isEmpty() {
+		String query = "Select * from patient";
+		try {
+			Statement stm = conn.createStatement();
+			ResultSet rs = stm.executeQuery(query);
+			if (rs == null) {
+				return true;
+			}
+		} catch (SQLException e) {
+
+		}
+		return false;
+	}
+
+	@Override
+	public List<Patient> findAllPatient() {
+		List<Patient> patients = new ArrayList<>();
+		if (conn != null) {
+			String query = "Select * from patient";
+			try {
+				Statement stm = conn.createStatement();
+				ResultSet rs = stm.executeQuery(query);
+				if (rs == null) {
+					System.out.println("Database is empty");
+				} else {
+
+					while (rs.next()) {
+						Patient p = new Patient();
+						p.setId(rs.getInt(1));
+						p.setName(rs.getString(2));
+						p.setAddress(rs.getString(3));
+						p.setPhoneNumber(rs.getLong(4));
+						patients.add(p);
+					}
+
+				}
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+		} else {
+			System.out.println("Connection error");
+		}
+		return patients;
+	}
+
+//
+	@Override
+	public void deletePatientById(int id) {
+		if (conn != null) {
+
+			if (!isEmpty()) {
+				String query = "Delete from patient where id =" + id;
+				try {
+					Statement stm = conn.createStatement();
+					int affectedRows = stm.executeUpdate(query);
+					if (affectedRows > 0) {
+						System.out.println("Successfully deleted");
+					} else {
+						System.out.println("Error deleting");
+					}
+				} catch (SQLException e) {
+
+				}
+			} else {
+				System.out.println("Database is empty");
+			}
+		} else {
+			System.out.println("Connectin error");
+		}
+	}
+
+	@Override
+	public Patient getPatientById(int id) {
+		Patient p = new Patient();
+		if (conn != null) {
+
+			if (!isEmpty()) {
+				String query = "Select * from patient where id =" + id;
+				try {
+					Statement stm = conn.createStatement();
+					ResultSet rs = stm.executeQuery(query);
+					if (rs == null) {
+						System.out.println("Invalid id");
+					} else {
+						while (rs.next()) {
+
+							p.setId(rs.getInt(1));
+							p.setName(rs.getString(2));
+							p.setAddress(rs.getString(3));
+							p.setPhoneNumber(rs.getLong(4));
+						}
+					}
+				} catch (SQLException e) {
+
+				}
+			} else {
+				System.out.println("Database is empty");
+			}
+		} else {
+			System.out.println("Connection error");
+		}
+		return p;
+	}
+
+	
+
+	@Override
+	public void updatePatient(int id) {
+		if (conn != null) {
+
+			if (!isEmpty()) {
+				 Patient p=this.getPatientById(id);
+				try {
+					Statement stm = conn.createStatement();
+					int affectedRows = stm.executeUpdate(query);
+					if (affectedRows > 0) {
+						System.out.println("Successfully deleted");
+					} else {
+						System.out.println("Error deleting");
+					}
+				} catch (SQLException e) {
+
+				}
+			} else {
+				System.out.println("Database is empty");
+			}
+		} else {
+			System.out.println("Connectin error");
+		}
+	
+
+	}
+}
